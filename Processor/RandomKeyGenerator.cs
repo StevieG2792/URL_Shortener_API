@@ -1,4 +1,6 @@
-﻿namespace URLShortener.Controllers
+﻿using URL_Shortener_API.Interfaces;
+
+namespace URL_Shortener_API.Processor
 {
     public class RandomKeyGenerator : IKeyGenerator
     {

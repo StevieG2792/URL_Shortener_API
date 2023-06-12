@@ -1,4 +1,4 @@
-﻿namespace URLShortener.Controllers
+﻿namespace URL_Shortener_API.Interfaces
 {
     public interface IKeyGenerator
     {

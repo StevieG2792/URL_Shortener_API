@@ -1,8 +1,7 @@
-﻿namespace URLShortener.Controllers
+﻿namespace URL_Shortener_API.Interfaces
 {
     public interface IURLShortener
     {
         string ShortenURL(string url);
-        string RetrieveURL(string key);
     }
 }

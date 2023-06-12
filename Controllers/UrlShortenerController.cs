@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using System;
+using URL_Shortener_API.Interfaces;
 
 namespace URLShortener.Controllers
 {
@@ -8,10 +9,12 @@ namespace URLShortener.Controllers
     public class UrlShortenerController : ControllerBase
     {
         private readonly IURLShortener urlShortener;
+        private readonly IURLRetrieval urlRetrieval;
 
-        public UrlShortenerController(IURLShortener urlShortener)
+        public UrlShortenerController(IURLShortener urlShortener, IURLRetrieval urlRetrieval)
         {
             this.urlShortener = urlShortener;
+            this.urlRetrieval = urlRetrieval;
         }
 
         [HttpPost]
@@ -24,10 +27,10 @@ namespace URLShortener.Controllers
             return Ok(shortenedUrl);
         }
 
-        [HttpGet("{key}")]
-        public IActionResult RetrieveURL(string key)
+        [HttpGet]
+        public IActionResult RetrieveURL(string shortURL)
         {
-            string longURL = urlShortener.RetrieveURL(key);
+            string longURL = urlRetrieval.RetrieveURL(shortURL);
             if (longURL != null)
                 return Ok(longURL);
             else

@@ -1,6 +1,8 @@
 ﻿using LiteDB;
+using URL_Shortener_API.Interfaces;
+using URL_Shortener_API.Models;
 
-namespace URLShortener.Controllers
+namespace URL_Shortener_API.Processor
 {
     public class URLShortening : IURLShortener
     {
@@ -19,23 +21,17 @@ namespace URLShortener.Controllers
             var existingUrlMapping = urlCollection.FindOne(x => x.LongURL == url);
             if (existingUrlMapping != null)
             {
-                return "A shortened URL already exists: " + $"https://pyrc.com/api/v1/shortenurl/{existingUrlMapping.Key}";
+                return "A shortened URL already exists: " + $"https://pyrc.com/api/v1/{existingUrlMapping.Key}";
             }
             string key = keyGenerator.GenerateKey();
 
-            
+
             var urlMapping = new URLMapping { Key = key, LongURL = url };
             urlCollection.Insert(urlMapping);
 
-            return $"https://pyrc.com/api/v1/shortenurl/{key}";
+            return $"https://pyrc.com/api/v1/{key}";
         }
 
-        public string RetrieveURL(string key)
-        {
-            var urlCollection = liteDb.GetCollection<URLMapping>("url_mappings");
-            var urlMapping = urlCollection.FindOne(x => x.Key == key);
 
-            return urlMapping?.LongURL;
-        }
     }
 }
