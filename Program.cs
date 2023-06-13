@@ -1,4 +1,5 @@
 using LiteDB;
+using URL_Shortener_API.Data;
 using URL_Shortener_API.Interfaces;
 using URL_Shortener_API.Processor;
 
@@ -13,6 +14,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<IURLShortener, URLShortening>();
 builder.Services.AddScoped<IURLRetrieval, URLRetrieval>();
+builder.Services.AddScoped<IDataStorage, DataStorage>();
 builder.Services.AddSingleton<IKeyGenerator, RandomKeyGenerator>();
 builder.Services.AddSingleton<LiteDatabase>(_ => new LiteDatabase("ShortenedLinks.db"));
 

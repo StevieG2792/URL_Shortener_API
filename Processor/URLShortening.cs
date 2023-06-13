@@ -7,27 +7,24 @@ namespace URL_Shortener_API.Processor
     public class URLShortening : IURLShortener
     {
         private readonly IKeyGenerator keyGenerator;
-        private readonly LiteDatabase liteDb;
+        private readonly IDataStorage dataStorage;
 
-        public URLShortening(IKeyGenerator keyGenerator, LiteDatabase liteDb)
+        public URLShortening(IKeyGenerator keyGenerator, IDataStorage dataStorage)
         {
             this.keyGenerator = keyGenerator;
-            this.liteDb = liteDb;
+            this.dataStorage = dataStorage;
         }
 
         public string ShortenURL(string url)
         {
-            var urlCollection = liteDb.GetCollection<URLMapping>("url_mappings");
-            var existingUrlMapping = urlCollection.FindOne(x => x.LongURL == url);
-            if (existingUrlMapping != null)
+            var existingUrlMapping = dataStorage.CheckURLExists(url);
+            if (existingUrlMapping != "x")
             {
-                return "A shortened URL already exists: " + $"https://pyrc.com/api/v1/{existingUrlMapping.Key}";
+                return existingUrlMapping;
             }
+
             string key = keyGenerator.GenerateKey();
-
-
-            var urlMapping = new URLMapping { Key = key, LongURL = url };
-            urlCollection.Insert(urlMapping);
+            dataStorage.StoreURLMapping(key, url);
 
             return $"https://pyrc.com/api/v1/{key}";
         }

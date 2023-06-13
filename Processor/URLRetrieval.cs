@@ -7,21 +7,19 @@ namespace URL_Shortener_API.Processor
 {
     public class URLRetrieval : IURLRetrieval
     {
-        private readonly LiteDatabase liteDb;
+        private readonly IDataStorage dataStorage;
 
-        public URLRetrieval(LiteDatabase liteDb)
+        public URLRetrieval(IDataStorage dataStorage)
         {
-            this.liteDb = liteDb;
+            this.dataStorage = dataStorage;
         }
         public string RetrieveURL(string shortURL)
         {
             string[] splitURL = shortURL.Split('/');
             string key = splitURL[splitURL.Length - 1];
 
-            var urlCollection = liteDb.GetCollection<URLMapping>("url_mappings");
-            var urlMapping = urlCollection.FindOne(x => x.Key == key);
+            return dataStorage.GetLongURL(key);
 
-            return urlMapping?.LongURL;
         }
     }
 }
