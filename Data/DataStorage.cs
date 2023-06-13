@@ -16,10 +16,16 @@ namespace URL_Shortener_API.Data
             this.liteDb = liteDb;
         }
 
+        private ILiteCollection<URLMapping> Mappings()
+        {
+            var mappings = liteDb.GetCollection<URLMapping>("url_mappings");
+            return mappings;
+        }
         
+
         public string GetLongURL(string key)
         {
-            var urlCollection = liteDb.GetCollection<URLMapping>("url_mappings");
+            var urlCollection = Mappings();
             var urlMapping = urlCollection.FindOne(x => x.Key == key);
 
             return urlMapping?.LongURL;
@@ -27,7 +33,7 @@ namespace URL_Shortener_API.Data
 
         public string CheckURLExists(string url)
         {
-            var urlCollection = liteDb.GetCollection<URLMapping>("url_mappings");
+            var urlCollection = Mappings();
             var existingUrlMapping = urlCollection.FindOne(x => x.LongURL == url);
             if (existingUrlMapping != null)
             {
@@ -39,14 +45,14 @@ namespace URL_Shortener_API.Data
 
         public void StoreURLMapping(string key, string longURL)
         {
-            var urlCollection = liteDb.GetCollection<URLMapping>("url_mappings");
+            var urlCollection = Mappings();
             var urlMapping = new URLMapping { Key = key, LongURL = longURL };
             urlCollection.Insert(urlMapping);
         }
 
         public bool CheckIfKeyExists(string key)
         {
-            var urlCollection = liteDb.GetCollection<URLMapping>("url_mappings");
+            var urlCollection = Mappings();
             var urlMapping = urlCollection.FindOne(x => x.Key == key);
 
             return urlMapping != null;
